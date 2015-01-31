@@ -2,8 +2,12 @@
 #define LOWER_SPEED 3
 #define START_ROTATE 4
 #define STOP_ROTATE 5
+#define SERVO_PIN 6
+
+#include <Servo.h>
 
 char incomingByte;
+Servo myservo;
 
 void reset_pins()
 {
@@ -11,6 +15,7 @@ void reset_pins()
 	digitalWrite(LOWER_SPEED, LOW);			
 	digitalWrite(START_ROTATE, LOW);			
 	digitalWrite(STOP_ROTATE, LOW);			
+	myservo.write(0);
 }
 
 void setup()
@@ -20,6 +25,8 @@ void setup()
 	pinMode(LOWER_SPEED, OUTPUT); 	
 	pinMode(START_ROTATE, OUTPUT); 	
 	pinMode(STOP_ROTATE, OUTPUT); 	
+	myservo.attach(SERVO_PIN);
+	delay(500);
 }
 
 void loop()
@@ -31,10 +38,10 @@ void loop()
 		Serial.print("Received: ");
 		Serial.println(incomingByte);
 	}
-        else
-        {
-                incomingByte = ' '; 
-        }
+	else
+	{
+		incomingByte = ' '; 
+	}
 
 	switch(incomingByte)
 	{
@@ -50,10 +57,13 @@ void loop()
 		case 'f':
 			digitalWrite(STOP_ROTATE, HIGH);			
 			break;
+		case 'g':
+			myservo.write(0);
+			break;
 		default:
 			reset_pins();
 	}
 
-	delay(1000);
+	delay(500);
 	reset_pins();
 }
