@@ -1,9 +1,14 @@
+local io = require("io")
+local http = require("socket.http")
+
 scriptId = 'com.thalmic.examples.myofan'
 scriptTitle = "Myo Fan"
 scriptDetailsUrl = "" -- not important
 
 SPEED_CONTINUOUS_TIMEOUT = 1000
 SPEED_LAST = 0
+
+IP_ADDRESS = '192.168.42.5'
 
 function activeAppName()
     return "Myo Fan"
@@ -22,7 +27,7 @@ function onPeriodic()
 			local currentPitch = myo.getPitch()
 			if (currentPitch > 0.5) then
 				speed_up()
-				SPEED_LAST = myo.getTimeMilliseconds()	
+				SPEED_LAST = myo.getTimeMilliseconds()
 			elseif (currentPitch < -0.5) then
 				speed_down()
 				SPEED_LAST = myo.getTimeMilliseconds()
@@ -31,31 +36,34 @@ function onPeriodic()
 	end
 end
 
-
 -- Includes keyboard commands for moving the fan
 function rotate()
-	myo.keyboard("a", "press")
-	myo.keyboard("return", "press")
-end 
+	http.request{
+		url = "http://" .. IP_ADDRESS .. "/action=rotate",
+	}
+end
 
 function stop_rotate()
-	myo.keyboard("s", "press")
-	myo.keyboard("return", "press")
-end 
+	http.request{
+		url = "http://" .. IP_ADDRESS .. "/action=norotate",
+	}
+end
 
 function speed_up()
-	myo.keyboard("d", "press")
-	myo.keyboard("return", "press")
-end 
+	http.request{
+		url = "http://" .. IP_ADDRESS .. "/action=speedup",
+	}
+end
 
 function speed_down()
-	myo.keyboard("f", "press")
-	myo.keyboard("return", "press")
+	http.request{
+		url = "http://" .. IP_ADDRESS .. "/action=speeddown",
+	}
 end
 
 
 -- Used to fix waves dependent on left/right hand use
-function conditionallySwapWave(pose) 
+function conditionallySwapWave(pose)
 	if myo.getArm() == left then
 		if pose == "waveIn" then
 			pose = "waveOut"
@@ -77,9 +85,9 @@ function onPoseEdge(pose, edge)
 
 	if edge == "on" then
 		if pose == "waveIn" then
-    		rotate()  
+    		rotate()
 		elseif pose == "waveOut" then
-			stop_rotate()    	
+			stop_rotate()
 		-- spread fingers and fist used for unlocking/locking
 		elseif pose == "fingersSpread" then
 			myo.unlock("hold")
