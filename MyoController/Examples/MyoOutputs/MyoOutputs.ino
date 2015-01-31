@@ -1,4 +1,4 @@
-#include <MyoController.h>
+#include "MyoController.h"
 
 #define fistP 4
 #define waveinP 5
