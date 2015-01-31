@@ -48,8 +48,7 @@ function speed_up()
 	myo.keyboard("return", "press")
 end 
 
-function speed_down()d
-
+function speed_down()
 	myo.keyboard("f", "press")
 	myo.keyboard("return", "press")
 end
