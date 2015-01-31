@@ -7,6 +7,7 @@
 #define doubletapP 8
 
 MyoController myo = MyoController();
+bool unlocked = rest
 
 void setup() {
 
@@ -21,7 +22,6 @@ void setup() {
 
 void loop()
 {
-   
    myo.updatePose();
    switch ( myo.getCurrentPose() ) {
     case rest:
@@ -29,7 +29,6 @@ void loop()
       digitalWrite(waveinP,LOW);
       digitalWrite(waveoutP,LOW);
       digitalWrite(fingersSpreadP,LOW);
-      digitalWrite(doubletapP,LOW);
       break;
     case fist:
       digitalWrite(fistP,HIGH);
@@ -44,8 +43,14 @@ void loop()
       digitalWrite(fingersSpreadP,HIGH);
       break;
     case doubleTap:
-      digitalWrite(doubletapP,HIGH);
+      if (unlocked == false) {
+        digitalWrite(doubletapP,HIGH);
+        unlocked = true;
+      } else {
+        digitalWrite(doubletapP, LOW);
+        unlocked = false;
+      }
       break;
    } 
-   delay(100);
+   delay(500);
 }
