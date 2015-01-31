@@ -16,7 +16,7 @@ end
 
 -- Periodically go through to check if fan speed needs to be increased.
 function onPeriodic()
-	if (myo.isUnlocked) then
+	if (myo.isUnlocked()) then
 		local now = myo.getTimeMilliseconds()
 		if (now > (SPEED_CONTINUOUS_TIMEOUT + SPEED_LAST) ) then
 			local currentPitch = myo.getPitch()
